@@ -1,0 +1,442 @@
+{
+    "info": {
+        "name": "ATS Score Api Collection",
+        "description": "ATS Score Check API — All endpoints (Auth, and future APIs)",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:5000",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Sign Up",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/auth/signup",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "auth",
+                        "signup"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"username\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Test@1234\"\n}"
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "if (pm.response.code === 201) {",
+                            "    const res = pm.response.json();",
+                            "    pm.collectionVariables.set('token', res.token);",
+                            "    pm.test('Sign Up successful', () => {",
+                            "        pm.expect(res.success).to.be.true;",
+                            "        pm.expect(res.token).to.be.a('string');",
+                            "    });",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "response": []
+        },
+        {
+            "name": "Login with Email",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/auth/login",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "auth",
+                        "login"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"login\": \"john@example.com\",\n  \"password\": \"Test@1234\"\n}"
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "if (pm.response.code === 200) {",
+                            "    const res = pm.response.json();",
+                            "    pm.collectionVariables.set('token', res.token);",
+                            "    pm.test('Login with email successful', () => {",
+                            "        pm.expect(res.success).to.be.true;",
+                            "        pm.expect(res.token).to.be.a('string');",
+                            "    });",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "response": []
+        },
+        {
+            "name": "Login with Username",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/auth/login",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "auth",
+                        "login"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"login\": \"johndoe\",\n  \"password\": \"Test@1234\"\n}"
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "if (pm.response.code === 200) {",
+                            "    const res = pm.response.json();",
+                            "    pm.collectionVariables.set('token', res.token);",
+                            "    pm.test('Login with username successful', () => {",
+                            "        pm.expect(res.success).to.be.true;",
+                            "        pm.expect(res.token).to.be.a('string');",
+                            "    });",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "response": []
+        },
+        {
+            "name": "Get Profile (Protected)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/auth/profile",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "auth",
+                        "profile"
+                    ]
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "pm.test('Profile fetched successfully', () => {",
+                            "    const res = pm.response.json();",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.have.property('email');",
+                            "    pm.expect(res.data).to.have.property('username');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "response": []
+        },
+        {
+            "name": "Analyze Resume (without JD)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/analysis/analyze",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "analysis",
+                        "analyze"
+                    ]
+                },
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "resume",
+                            "type": "file",
+                            "src": ""
+                        }
+                    ]
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "pm.test('Resume analyzed successfully', () => {",
+                            "    const res = pm.response.json();",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data.score).to.be.a('number');",
+                            "    pm.expect(res.data.breakdown).to.be.an('array');",
+                            "});",
+                            "if (pm.response.code === 200) {",
+                            "    const res = pm.response.json();",
+                            "    pm.collectionVariables.set('analysisId', res.data._id);",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "response": []
+        },
+        {
+            "name": "Analyze Resume (with JD)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/analysis/analyze",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "analysis",
+                        "analyze"
+                    ]
+                },
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "resume",
+                            "type": "file",
+                            "src": ""
+                        },
+                        {
+                            "key": "jobDescription",
+                            "value": "We are looking for a Full Stack Developer with 2+ years of experience in React.js, Node.js, MongoDB, Express.js, Docker, and CI/CD pipelines. Experience with Next.js and TypeScript is a plus.",
+                            "type": "text"
+                        }
+                    ]
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "pm.test('Resume analyzed with JD successfully', () => {",
+                            "    const res = pm.response.json();",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data.score).to.be.a('number');",
+                            "    pm.expect(res.data.missingSkills).to.be.an('array');",
+                            "});",
+                            "if (pm.response.code === 200) {",
+                            "    const res = pm.response.json();",
+                            "    pm.collectionVariables.set('analysisId', res.data._id);",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "response": []
+        },
+        {
+            "name": "Save Analysis",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/analysis/save",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "analysis",
+                        "save"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"fileName\": \"Abhishek_Resume.pdf\",\n  \"score\": 72,\n  \"breakdown\": [\n    { \"label\": \"Resume Completeness\", \"value\": 85 },\n    { \"label\": \"Keyword Optimization\", \"value\": 70 },\n    { \"label\": \"ATS Formatting\", \"value\": 65 },\n    { \"label\": \"Readability & Grammar\", \"value\": 60 }\n  ],\n  \"missingSkills\": [\"Docker\", \"Unit Testing\"],\n  \"presentSkills\": [\"React\", \"Node.js\", \"MongoDB\"],\n  \"suggestions\": [\n    {\n      \"title\": \"Add Missing Skills\",\n      \"description\": \"Include Docker and testing frameworks.\"\n    }\n  ],\n  \"extractedData\": {},\n  \"jobDescription\": null\n}"
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "pm.test('Analysis saved successfully', () => {",
+                            "    const res = pm.response.json();",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.have.property('_id');",
+                            "});",
+                            "if (pm.response.code === 201) {",
+                            "    const res = pm.response.json();",
+                            "    pm.collectionVariables.set('analysisId', res.data._id);",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "response": []
+        },
+        {
+            "name": "Get Analysis History",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/analysis/history",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "analysis",
+                        "history"
+                    ]
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "pm.test('History fetched successfully', () => {",
+                            "    const res = pm.response.json();",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.be.an('array');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "response": []
+        },
+        {
+            "name": "Get Analysis by ID",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/analysis/{{analysisId}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "analysis",
+                        "{{analysisId}}"
+                    ]
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "pm.test('Single analysis fetched successfully', () => {",
+                            "    const res = pm.response.json();",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.have.property('score');",
+                            "    pm.expect(res.data).to.have.property('extractedData');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "response": []
+        }
+    ]
+}
