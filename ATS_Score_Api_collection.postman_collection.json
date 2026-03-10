@@ -14,6 +14,11 @@
             "key": "token",
             "value": "",
             "type": "string"
+        },
+        {
+            "key": "jobId",
+            "value": "",
+            "type": "string"
         }
     ],
     "item": [
@@ -437,6 +442,227 @@
                 }
             ],
             "response": []
+        },
+        {
+            "name": "Job Management",
+            "item": [
+                {
+                    "name": "Create Job",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/jobs",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "jobs"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"companyName\": \"Google\",\n  \"jobTitle\": \"Frontend Developer\",\n  \"location\": \"Bangalore, Remote\",\n  \"yearsOfExperience\": 2,\n  \"jobLink\": \"https://careers.google.com/jobs/123\",\n  \"skills\": [\"React\", \"TypeScript\", \"Node.js\"],\n  \"referralPerson\": \"Jane Smith\",\n  \"referralAvailable\": \"Yes\",\n  \"interviewStatus\": \"Applied\",\n  \"appliedOn\": \"2026-03-10\",\n  \"upcomingInterviewDetails\": \"Round 1 — Phone Screen — March 15, 2026 at 10 AM\",\n  \"resumeUsed\": \"Frontend_Developer_Resume.pdf\"\n}"
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Job created successfully', () => {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.success).to.be.true;",
+                                    "    pm.expect(res.data).to.have.property('_id');",
+                                    "    pm.expect(res.data.companyName).to.eql('Google');",
+                                    "});",
+                                    "if (pm.response.code === 201) {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.collectionVariables.set('jobId', res.data._id);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "response": []
+                },
+                {
+                    "name": "Get All Jobs",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/jobs",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "jobs"
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('All jobs fetched successfully', () => {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.success).to.be.true;",
+                                    "    pm.expect(res.data).to.be.an('array');",
+                                    "    pm.expect(res.count).to.be.a('number');",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "response": []
+                },
+                {
+                    "name": "Get Job by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/jobs/{{jobId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "jobs",
+                                "{{jobId}}"
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Single job fetched successfully', () => {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.success).to.be.true;",
+                                    "    pm.expect(res.data).to.have.property('companyName');",
+                                    "    pm.expect(res.data).to.have.property('jobTitle');",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "response": []
+                },
+                {
+                    "name": "Update Job",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/jobs/{{jobId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "jobs",
+                                "{{jobId}}"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"interviewStatus\": \"Interview Scheduled\",\n  \"upcomingInterviewDetails\": \"Round 2 — System Design — March 20, 2026 at 2 PM\"\n}"
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Job updated successfully', () => {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.success).to.be.true;",
+                                    "    pm.expect(res.data.interviewStatus).to.eql('Interview Scheduled');",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "response": []
+                },
+                {
+                    "name": "Delete Job",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/jobs/{{jobId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "jobs",
+                                "{{jobId}}"
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Job deleted successfully', () => {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.success).to.be.true;",
+                                    "    pm.expect(res.message).to.eql('Job deleted successfully');",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "response": []
+                }
+            ]
         }
     ]
 }

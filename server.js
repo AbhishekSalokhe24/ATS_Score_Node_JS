@@ -27,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 // ── Routes ────────────────────────────────────────────────────────────
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/analysis", require("./routes/analysisRoutes"));
+app.use("/api/jobs", require("./routes/jobRoutes"));
 
 // ── Health-check route ────────────────────────────────────────────────
 app.get("/", (req, res) => {
