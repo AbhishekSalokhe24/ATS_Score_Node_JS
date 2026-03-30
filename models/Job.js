@@ -52,11 +52,15 @@ const jobSchema = new mongoose.Schema(
         "Applied",
         "Screening",
         "Interview Scheduled",
+        "Technical Round",
+        "HR Round",
         "Interviewed",
         "Offered",
-        "Rejected",
         "Accepted",
+        "Rejected",
+        "Withdrawn",
       ],
+
       default: "",
     },
     appliedOn: {
@@ -76,7 +80,7 @@ const jobSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Job", jobSchema);
